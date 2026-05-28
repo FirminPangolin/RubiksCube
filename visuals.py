@@ -1,3 +1,5 @@
+import random as r
+
 class Cube:
     def __init__(self):
         self.cube = {
@@ -8,6 +10,13 @@ class Cube:
             "BA" : [["B" for _ in range(3)] for _ in range(3)],
             "BO" : [["Y" for _ in range(3)] for _ in range(3)]
         }
+
+        self.moves = [self.move_u, self.move_u_anti,
+                      self.move_left, self.move_left_anti,
+                      self.move_front, self.move_front_anti,
+                      self.move_right, self.move_right_anti,
+                      self.move_back, self.move_back_anti,
+                      self.move_bottom, self.move_bottom_anti]
 
     """Affiche le cube"""
     def showCube(self):
@@ -163,26 +172,43 @@ class Cube:
         for i in range(3):
             self.move_right()
 
+    """Rotation clockwise de la face basse"""
+    def move_bottom(self):
+        #Gestion de l'interchangement des faces affectées
+        up = self.cube["F"][2].copy()
+        right = self.cube["R"][2].copy()
+        bottom = self.cube["BA"][2].copy()
+        left = self.cube["L"][2].copy()
+
+        self.cube["R"][2] = up
+        self.cube["BA"][2] = right
+        self.cube["L"][2] = bottom
+        self.cube["F"][2] = left
+        
+        #Gestion de la gauche avant elle-même
+        self.rotate_face_clockwise("BO")
+        
+    """Rotation anti clockwise de la face basse"""
+    def move_bottom_anti(self):
+        for i in range(3):
+            self.move_bottom()
+
+    def is_solved(self):
+        for face in self.cube:
+            color = self.cube[face][0][0]
+
+            for ligne in self.cube[face]:
+                for case in ligne:
+                    if case != color:
+                        return False
+        return True
+    
+    def shuffle(self, nb):
+        for i in range(nb):
+            self.moves[r.randint(0, len(self.moves) - 1)]()
+            self.showCube()
+
         
 cube = Cube()
 
-cube = Cube()
-initial = str(cube.cube)
-
-for _ in range(4):
-    cube.move_right()
-
-print(initial == str(cube.cube))
-cube.showCube()
-
-#TODO  :
-"""
-UP - Done
-FRONT - Done
-BACK - Done
-LEFT - Done
-RIGHT
-BOTTOM
-
-CHECK SOLVED
-"""
+cube.shuffle(2)
