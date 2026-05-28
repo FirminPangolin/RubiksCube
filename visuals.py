@@ -108,8 +108,8 @@ class Cube:
         self.cube["BO"][2] = right
 
         for i in range(3):
-            self.cube["R"][i][2] = bottom[0 if i == 2 else 2]
-            self.cube["L"][i][0] = up[0 if i == 2 else 2]
+            self.cube["R"][i][2] = bottom[2 - i]
+            self.cube["L"][i][0] = up[2 - i]
             
         #Gestion de la face avant elle-même
         self.rotate_face_clockwise("BA")
@@ -119,22 +119,68 @@ class Cube:
         for i in range(3):
             self.move_back()
 
+    """Rotation clockwise de la face gauche"""
+    def move_left(self):
+        #Gestion de l'interchangement des faces affectées
+        up = [self.cube["U"][i][0] for i in range(3)]
+        right = [self.cube["F"][i][0] for i in range(3)]
+        bottom = [self.cube["BO"][i][0] for i in range(3)]
+        left = [self.cube["BA"][i][2] for i in range(3)]
+
+        for i in range(3):
+            self.cube["U"][i][0] = left[2 - i]
+            self.cube["BA"][i][2] = bottom[2 - i]
+            self.cube["F"][i][0] = up[i]
+            self.cube["BO"][i][0] = right[i]
+            
+        #Gestion de la gauche avant elle-même
+        self.rotate_face_clockwise("L")
+        
+    """Rotation anti clockwise de la face gauche"""
+    def move_left_anti(self):
+        for i in range(3):
+            self.move_left()
+
+    """Rotation clockwise de la face droite"""
+    def move_right(self):
+        #Gestion de l'interchangement des faces affectées
+        up = [self.cube["U"][i][2] for i in range(3)]
+        right = [self.cube["BA"][i][0] for i in range(3)]
+        bottom = [self.cube["BO"][i][2] for i in range(3)]
+        left = [self.cube["F"][i][2] for i in range(3)]
+
+        for i in range(3):
+            self.cube["BA"][i][0] = up[2 - i]
+            self.cube["BO"][i][2] = right[2 - i]
+            self.cube["U"][i][2] = left[i]
+            self.cube["F"][i][2] = bottom[i]
+            
+        #Gestion de la gauche avant elle-même
+        self.rotate_face_clockwise("R")
+        
+    """Rotation anti clockwise de la face droite"""
+    def move_right_anti(self):
+        for i in range(3):
+            self.move_right()
+
         
 cube = Cube()
 
-cube.move_back()
-cube.move_back_anti()
+cube = Cube()
+initial = str(cube.cube)
 
+for _ in range(4):
+    cube.move_right()
+
+print(initial == str(cube.cube))
 cube.showCube()
-        
-
 
 #TODO  :
 """
 UP - Done
 FRONT - Done
 BACK - Done
-LEFT
+LEFT - Done
 RIGHT
 BOTTOM
 
