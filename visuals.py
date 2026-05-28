@@ -91,15 +91,39 @@ class Cube:
         #Gestion de la face avant elle-même
         self.rotate_face_clockwise("F")
         
+    """Rotation anti clockwise de la face avant"""
     def move_front_anti(self):
         for i in range(3):
             self.move_front()
 
+    """Rotation clockwise de la face arrière"""
+    def move_back(self):
+        #Gestion de l'interchangement des faces affectées
+        up = self.cube["U"][0].copy()
+        bottom = self.cube["BO"][2].copy()
+        right = [self.cube["L"][i][0] for i in range(3)]
+        left = [self.cube["R"][i][2] for i in range(3)]
+
+        self.cube["U"][0] = left
+        self.cube["BO"][2] = right
+
+        for i in range(3):
+            self.cube["R"][i][2] = bottom[0 if i == 2 else 2]
+            self.cube["L"][i][0] = up[0 if i == 2 else 2]
+            
+        #Gestion de la face avant elle-même
+        self.rotate_face_clockwise("BA")
+        
+    """Rotation anti clockwise de la face arrière"""
+    def move_back_anti(self):
+        for i in range(3):
+            self.move_back()
+
         
 cube = Cube()
 
-cube.move_front()
-cube.move_front_anti()
+cube.move_back()
+cube.move_back_anti()
 
 cube.showCube()
         
@@ -108,8 +132,8 @@ cube.showCube()
 #TODO  :
 """
 UP - Done
-FRONT
-BACK 
+FRONT - Done
+BACK - Done
 LEFT
 RIGHT
 BOTTOM
