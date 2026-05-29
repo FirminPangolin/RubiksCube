@@ -1,4 +1,5 @@
 import random as r
+import copy
 
 class Cube:
     def __init__(self):
@@ -11,12 +12,12 @@ class Cube:
             "BO" : [["Y" for _ in range(3)] for _ in range(3)]
         }
 
-        self.moves = [self.move_u, self.move_u_anti,
-                      self.move_left, self.move_left_anti,
-                      self.move_front, self.move_front_anti,
-                      self.move_right, self.move_right_anti,
-                      self.move_back, self.move_back_anti,
-                      self.move_bottom, self.move_bottom_anti]
+        self.moves = {"U" : self.move_u, "U'" : self.move_u_anti,
+                      "L" : self.move_left, "L'" : self.move_left_anti,
+                      "F" : self.move_front, "F'" : self.move_front_anti,
+                      "R" : self.move_right, "R'" : self.move_right_anti,
+                      "B" : self.move_back, "B'" : self.move_back_anti,
+                      "D" : self.move_bottom, "D'" : self.move_bottom_anti}
 
     """Affiche le cube"""
     def showCube(self):
@@ -204,11 +205,12 @@ class Cube:
         return True
     
     def shuffle(self, nb):
+        chosenMoves = []
+        letters = ["U", "U'", "F", "F'", "L", "L'", "R", "R'", "B", "B'", "D", "D'"]
         for i in range(nb):
-            self.moves[r.randint(0, len(self.moves) - 1)]()
-            self.showCube()
-
-        
-cube = Cube()
-
-cube.shuffle(2)
+            rand = r.randint(0, len(letters) - 1)
+            randMove = letters[rand]
+            chosenMoves.append(randMove)
+            self.moves[randMove]()
+        self.showCube()
+        return chosenMoves
